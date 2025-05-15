@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && push-dir --dir=dist --branch=gh-pages --cleanup",
     "preview": "vite preview",
-    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
+    "deploy": "vite build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "vue": "^3.5.13"
