@@ -56,12 +56,15 @@ const yierbubuImgArr = ref([...yierbubuImgs, ...yierbubuImgs]);
 const scrollImgRef = ref(null);
 let imgPushIntervalId = null
 imgPushIntervalId = setInterval(() => {
-  yierbubuImgArr.value.push(yierbubuImgArr.value[imgIndex]);
-  scrollImgRef.value[imgIndex]?.remove()
-  imgIndex++;
-  currentPosition.value -= 120
-  scrollWrapper.value.style.transform = `translateX(-${currentPosition.value}px)`;
-}, 1000);
+  Array.from({ length: 5 }).forEach(() => {
+    console.log('开始执行')
+    yierbubuImgArr.value.push(yierbubuImgArr.value[imgIndex]);
+    scrollImgRef.value[imgIndex]?.remove()
+    imgIndex++;
+    currentPosition.value -= 120
+    scrollWrapper.value.style.transform = `translateX(-${currentPosition.value}px)`;
+  })
+}, 5000);
 
 const calculateDays = () => {
   const startDate = new Date('2023-12-07');
