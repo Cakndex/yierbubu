@@ -52,7 +52,7 @@ import yierbubuImgs from '../assets/yierbubu/index';
 const days = ref(0);
 let intervalId;
 let imgIndex = 0;
-const yierbubuImgArr = ref([...yierbubuImgs]);
+const yierbubuImgArr = ref([...yierbubuImgs, ...yierbubuImgs]);
 const scrollImgRef = ref(null);
 let imgPushIntervalId = null
 imgPushIntervalId = setInterval(() => {
@@ -61,7 +61,7 @@ imgPushIntervalId = setInterval(() => {
   imgIndex++;
   currentPosition.value -= 120
   scrollWrapper.value.style.transform = `translateX(-${currentPosition.value}px)`;
-}, 960);
+}, 1000);
 
 const calculateDays = () => {
   const startDate = new Date('2023-12-07');
