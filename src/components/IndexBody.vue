@@ -8,8 +8,8 @@
       <div>
         <div class="desc_container text">在一起</div>
         <div class="days-container">
-          <span v-for="(digit, index) in formattedDays" :key="index" class="digit-card">{{ digit }}</span>
-          <span class="digit-card text">Days</span>
+          <div v-for="(digit, index) in formattedDays" :key="index" class="digit-card">{{ digit }}</div>
+          <div class="digit-card text">Days</div>
         </div>
       </div>
       <div class="right container">
@@ -199,6 +199,7 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   gap: 5px;
+  text-align: center;
 }
 
 .digit-card {
@@ -206,6 +207,9 @@ onBeforeUnmount(() => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 5px 10px;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content {

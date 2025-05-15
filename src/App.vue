@@ -1,10 +1,10 @@
 <template>
   <div>
     <BgmPlayer />
-    <Header />
+    <Header :activeIndex="activeIndex" />
     <section class="banner">
     </section>
-    <IndexBody/>
+    <IndexBody />
   </div>
 </template>
 
@@ -12,6 +12,7 @@
 import Header from './components/Header.vue'
 import BgmPlayer from './components/BgmPlayer.vue'
 import IndexBody from './components/IndexBody.vue'
+const activeIndex = 0
 </script>
 
 <style lang="less" scoped>

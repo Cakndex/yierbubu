@@ -1,7 +1,9 @@
 <template>
   <!-- 首页 -->
   <section class="header">
-    <p class="title">首页</p>
+    <p class="title" :class="[index === activeIndex ? 'active' : '']" v-for="(item, index) in headerList" :key="index">
+      {{ item }}
+    </p>
     <p class="title">动态</p>
     <p class="title">纪念日</p>
     <p class="title">相册</p>
@@ -9,7 +11,14 @@
 </template>
 
 <script setup lang="js">
-
+import { ref } from 'vue';
+const props = defineProps({
+  activeIndex: {
+    type: Number,
+    default: 0
+  }
+})
+const headerList = ref(['首页', '动态', '纪念日', '相册'])
 </script>
 
 <style lang="less">
