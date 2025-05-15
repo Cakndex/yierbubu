@@ -138,7 +138,7 @@ onBeforeUnmount(() => {
 .body {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: max-content;
   background: url('../assets/contentBg.jpg') no-repeat center center/cover;
 }
 
