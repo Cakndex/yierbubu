@@ -6,13 +6,13 @@
   font-family: 'nai';
   src: url('/renjiannailaobianlidian.ttf');
 }
-body{
+body {
   padding: 0;
   margin: 0;
-  overflow: hidden;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
-#app{
+#app {
   position: absolute;
   top: 0;
   left: 0;

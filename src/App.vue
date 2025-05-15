@@ -16,7 +16,7 @@ import IndexBody from './components/IndexBody.vue'
 
 <style lang="less" scoped>
 .banner {
-  height: calc(30vh - 60px);
+  height: 50vh;
   background: url('./assets/banner.png') no-repeat center center/cover;
 }
 </style>
