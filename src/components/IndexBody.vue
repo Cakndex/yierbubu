@@ -57,7 +57,6 @@ const scrollImgRef = ref(null);
 let imgPushIntervalId = null
 imgPushIntervalId = setInterval(() => {
   Array.from({ length: 5 }).forEach(() => {
-    console.log('开始执行')
     yierbubuImgArr.value.push(yierbubuImgArr.value[imgIndex]);
     scrollImgRef.value[imgIndex]?.remove()
     imgIndex++;

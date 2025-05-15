@@ -1,12 +1,10 @@
 <template>
   <!-- 首页 -->
   <section class="header">
-    <p class="title" :class="[index === activeIndex ? 'active' : '']" v-for="(item, index) in headerList" :key="index">
+    <p class="title" :class="[index === activeIndex ? 'active' : '']" v-for="(item, index) in headerList" :key="index"
+      @click="updateActiveIndex(index)">
       {{ item }}
     </p>
-    <p class="title">动态</p>
-    <p class="title">纪念日</p>
-    <p class="title">相册</p>
   </section>
 </template>
 
@@ -18,7 +16,11 @@ const props = defineProps({
     default: 0
   }
 })
+const emits = defineEmits(['update:activeIndex'])
 const headerList = ref(['首页', '动态', '纪念日', '相册'])
+const updateActiveIndex = (index) => {
+  emits('update:activeIndex', index)
+}
 </script>
 
 <style lang="less">
@@ -53,7 +55,11 @@ const headerList = ref(['首页', '动态', '纪念日', '相册'])
   .title:hover {
     cursor: url('/yier.png'), auto;
     opacity: 1;
-    font-size: 24px;
   }
+}
+
+.header .active {
+  font-size: 24px;
+  opacity: 1;
 }
 </style>

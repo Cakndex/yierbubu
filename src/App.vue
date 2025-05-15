@@ -1,10 +1,13 @@
 <template>
   <div>
     <BgmPlayer />
-    <Header :activeIndex="activeIndex" />
+    <Header v-model:activeIndex="activeIndex" />
     <section class="banner">
     </section>
-    <IndexBody />
+    <!-- 首页 -->
+    <IndexBody v-if="activeIndex === 0" />
+    <!-- 纪念日 -->
+    <MemoryDay v-if="activeIndex === 2" />
   </div>
 </template>
 
@@ -12,7 +15,9 @@
 import Header from './components/Header.vue'
 import BgmPlayer from './components/BgmPlayer.vue'
 import IndexBody from './components/IndexBody.vue'
-const activeIndex = 0
+import MemoryDay from './components/MemoryDay.vue'
+import { ref } from 'vue'
+const activeIndex = ref(0)
 </script>
 
 <style lang="less" scoped>
