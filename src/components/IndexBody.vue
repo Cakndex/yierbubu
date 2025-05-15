@@ -2,7 +2,7 @@
   <div class="body">
     <div class="avatar">
       <div class="left container">
-        <img class="img" src="../assets/yier_avatar.jpg" width="96" />
+        <img class="img" src="../assets/yier_avatar.jpg" width="84" />
         <div class="img_name">王宇晴</div>
       </div>
       <div>
@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="right container">
-        <img class="img" src="../assets/bubu_avatar.jpg" width="96" />
+        <img class="img" src="../assets/bubu_avatar.jpg" width="84" />
         <div class="img_name">刘云宇</div>
       </div>
     </div>
@@ -179,7 +179,6 @@ onBeforeUnmount(() => {
 }
 
 .avatar {
-  width: 100%;
   height: 150px;
   display: flex;
   align-items: center;

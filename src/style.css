@@ -18,3 +18,10 @@ body {
   left: 0;
   width: 100vw;
 }
+/* 移动端固定500px，overflow为hidden */
+/* @media screen and (max-width: 500px) {
+  #app {
+    width: 500px;
+    overflow-x: hidden;
+  }
+} */
