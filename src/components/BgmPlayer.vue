@@ -1,7 +1,7 @@
 <!-- BgmPlayer.vue -->
 <template>
   <div>
-    <audio ref="audioPlayer" src="/bgm.mp3" loop></audio>
+    <audio ref="audioPlayer" src="https://lf3-static.bytednsdoc.com/obj/eden-cn/ffseh7bfubfbps/bgm.mp3" loop></audio>
     <div class="bgm_icon" :class="{ 'rotate': isPlaying }" @click="togglePlay"></div>
   </div>
 </template>
