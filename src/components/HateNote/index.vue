@@ -120,9 +120,9 @@ const currentTab = ref('home');
 
 // 数据初始化
 const currentUser = ref({
-  id: 1,
-  name: '一二',
-  avatar: RoleImg[0]
+  id: 3,
+  name: '访客',
+  avatar: RoleImg[2]
 })
 
 const users = [
