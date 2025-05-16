@@ -1,7 +1,7 @@
 <template>
   <section class="banner">
   </section>
-  <div class="body">
+  <div class="index-body">
     <div class="avatar">
       <div class="left container">
         <img class="img" src="../assets/yier_avatar.jpg" width="84" />
@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
   background: url('../assets/banner.png') no-repeat center center/cover;
 }
 
-.body {
+.index-body {
   display: flex;
   flex-direction: column;
   height: max-content;

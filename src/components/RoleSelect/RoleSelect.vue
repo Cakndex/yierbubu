@@ -1,24 +1,27 @@
 <template>
-  <div v-if="showModal" class="role-selection-modal">
-    <div class="modal-content">
-      <h3 class="modal-title">请选择您的身份</h3>
-      <div class="role-cards">
-        <RoleCard v-for="role in roles" :key="role.id" :role="role" :selectedRole="selectedRole" @select="handleRoleSelection" />
+  <div v-if="showModal" class="modal-overlay">
+    <div class="role-selection-modal">
+      <div class="modal-content">
+        <h3 class="modal-title">请选择您的身份</h3>
+        <div class="role-cards">
+          <RoleCard v-for="role in roles" :key="role.id" :role="role" :selectedRole="selectedRole"
+            @select="handleRoleSelection" />
+        </div>
+        <button class="confirm-button" @click="confirmSelection">确定</button>
       </div>
-      <button class="confirm-button" @click="confirmSelection">确定</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import RoleCard from './RoleCard.vue'
 import { RoleImg } from '../../assets/yierbubu/index'
 
 const showModal = ref(false)
 const roles = ref([
-  { id: 'yier', name: '一二', icon: RoleImg[0], description: '公主的专属身份' },
-  { id: 'bubu', name: '布布', icon: RoleImg[1], description: '王子的专属身份' },
+  { id: 'yier', name: '一二', icon: RoleImg[0], description: '公主专属身份' },
+  { id: 'bubu', name: '布布', icon: RoleImg[1], description: '王子专属身份' },
   { id: 'guest', name: '访客', icon: RoleImg[2], description: '访客身份' }
 ])
 const selectedRole = ref(null)
@@ -48,6 +51,14 @@ onMounted(() => {
   }
 })
 
+watch(showModal, (newValue) => {
+  if (newValue) {
+    document.body.classList.add('no-scroll')
+  } else {
+    document.body.classList.remove('no-scroll')
+  }
+})
+
 const handleRoleSelection = (roleId) => {
   selectedRole.value = roleId
 }
@@ -63,11 +74,22 @@ const confirmSelection = () => {
 }
 </script>
 
+
 <style scoped lang="scss">
-.role-selection-modal {
+.modal-overlay {
   position: fixed;
-  top: 20%;
-  left: 5%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.role-selection-modal {
   width: 90%;
   max-height: 500px;
   display: flex;
@@ -121,5 +143,9 @@ const confirmSelection = () => {
       }
     }
   }
+}
+
+.no-scroll {
+  overflow: hidden !important;
 }
 </style>
