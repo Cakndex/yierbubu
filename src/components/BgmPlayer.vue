@@ -7,19 +7,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue';
 
-const isPlaying = ref(false)
-const audioPlayer = ref(null)
+const isPlaying = ref(false);
+const audioPlayer = ref(null);
 
 function togglePlay() {
   if (isPlaying.value) {
-    audioPlayer.value.pause()
+    audioPlayer.value.pause();
   } else {
-    audioPlayer.value.play()
+    audioPlayer.value.play();
   }
-  isPlaying.value = !isPlaying.value
+  isPlaying.value = !isPlaying.value;
 }
+
+function handleVisibilityChange() {
+  if (document.hidden) {
+    audioPlayer.value.pause();
+    isPlaying.value = false;
+  } else {
+    if (isPlaying.value) {
+      audioPlayer.value.play();
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
+});
+
 </script>
 
 <style scoped>
