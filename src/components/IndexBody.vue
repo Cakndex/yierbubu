@@ -1,4 +1,6 @@
 <template>
+  <section class="banner">
+  </section>
   <div class="body">
     <div class="avatar">
       <div class="left container">
@@ -137,6 +139,11 @@ onBeforeUnmount(() => {
 
 
 <style lang="less" scoped>
+.banner {
+  height: 50vh;
+  background: url('../assets/banner.png') no-repeat center center/cover;
+}
+
 .body {
   display: flex;
   flex-direction: column;

@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['update:activeIndex'])
-const headerList = ref(['首页', '动态', '纪念日', '相册'])
+const headerList = ref(['首页', '记仇本', '纪念日', '成长'])
 const updateActiveIndex = (index) => {
   emits('update:activeIndex', index)
 }
