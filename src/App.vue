@@ -19,10 +19,15 @@ import IndexBody from './components/IndexBody.vue'
 import MemoryDay from './components/MemoryDay.vue'
 import HateNote from './components/HateNote/index.vue'
 import RoleSelect from './components/RoleSelect/RoleSelect.vue'
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 const activeIndex = ref(0)
+watch(activeIndex, (newVal) => {
+  localStorage.setItem('yierbubu-activeIndex', newVal)
+})
+onMounted(() => {
+  activeIndex.value = Number(localStorage.getItem('yierbubu-activeIndex')) || 0
+})
+
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>

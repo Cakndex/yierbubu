@@ -17,7 +17,7 @@
               <img :src="currentUser.avatar" alt="头像" class="post-avatar">
               <div class="post-info">
                 <div class="post-name">{{ currentUser.name }}</div>
-                <span class="post-time">{{ formatDate(new Date().toISOString()) }}</span>
+                <span class="post-time">{{ formatDate(new Date().toLocaleString()) }}</span>
               </div>
             </div>
             <div class="post-form">
@@ -97,6 +97,8 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { RoleImg } from '../../assets/yierbubu/index'
 import StatsComponent from './StatsComponent.vue'
 import FilterComponent from './FilterComponent.vue';
@@ -144,7 +146,6 @@ const newPost = reactive({
 
 const newComment = reactive({ content: '' })
 const showUpload = ref(false)
-const searchText = ref('')
 const editingPost = ref(null) // 编辑中的动态对象
 
 const filterComponent = ref(null);
@@ -162,7 +163,7 @@ const filteredPosts = computed(() => {
     const selectedDate = new Date(filterComponent.value.selectedDate);
     result = result.filter(post => {
       const postDate = new Date(post.timestamp);
-      return postDate.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
+      return postDate.toLocaleString() === selectedDate.toLocaleString();
     });
   }
 
@@ -173,9 +174,14 @@ const showImageUpload = () => {
   showUpload.value = true
 }
 
+// 使用 dayjs 插件设置默认时区为北京时间
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Shanghai");
+
 // 日期格式化
 const formatDate = (dateStr) => {
-  return dayjs(dateStr).format('YYYY年MM月DD日');
+  return dayjs.tz(dateStr, "Asia/Shanghai").format('YYYY年MM月DD日 HH:MM');
 };
 
 // 生命周期钩子：初始化数据监听
@@ -201,23 +207,45 @@ onMounted(() => {
   }
 });
 
+// 头像转换为 Base64
+const convertImageToBase64 = (imageBlob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(imageBlob);
+  });
+};
+
+// 将 URL 转换为 Blob
+const convertUrlToBlob = async (url) => {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  return new Blob([arrayBuffer], { type: 'image/jpeg' });
+};
+
 // 发布动态（统一处理新建和编辑发布）
 const publishPost = async () => {
   if (!newPost.content && !newPost.images.length) {
     alert('请输入内容或上传图片');
     return;
   }
-
+  // 将用户头像 URL 转换为 Blob，然后转换为 Base64
+  const avatarBlob = await convertUrlToBlob(currentUser.value.avatar);
+  const avatarBase64 = await convertImageToBase64(avatarBlob);
   const isEdit = !!newPost.originalId; // 判断是否为编辑状态
   const newPostData = {
     id: isEdit ? newPost.originalId : Date.now(), // 编辑时使用原ID，新建时生成新ID
-    user: currentUser.value,
+    user: {
+      ...currentUser.value,
+      avatar: avatarBase64 // 使用 Base64 格式的头像
+    },
     content: newPost.content,
     images: newPost.images,
     comments: isEdit ? posts.value.find(p => p.id === newPost.originalId)?.comments || [] : [], // 保留原评论
     timestamp: isEdit
-      ? new Date(posts.value.find(p => p.id === newPost.originalId)?.timestamp).toISOString()
-      : new Date().toISOString(), // 保留原时间或生成新时间
+      ? new Date(posts.value.find(p => p.id === newPost.originalId)?.timestamp).toLocaleString()
+      : new Date().toLocaleString(), // 保留原时间或生成新时间
     forgiven: false
   };
   try {
@@ -289,7 +317,7 @@ const addComment = async (post) => {
   const newCommentData = {
     user: currentUser.value,
     content: newComment.content,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toLocaleString(),
   };
 
   try {
@@ -367,7 +395,6 @@ $dark-bg: #111827; // 暗黑模式背景
   padding: 24px 16px;
   max-width: 800px;
   margin: 0 auto;
-  margin-top: 40px;
 }
 
 .post-card {

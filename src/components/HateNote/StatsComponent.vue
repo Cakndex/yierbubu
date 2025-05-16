@@ -32,7 +32,7 @@ const props = defineProps({
 const statsData = computed(() => {
   const data = {};
   props.posts.forEach(post => {
-    const date = post.timestamp.split('T')[0];
+    const date = post.timestamp.split(' ')[0];
     if (!data[date]) {
       data[date] = { yier: false, bubu: false };
     }

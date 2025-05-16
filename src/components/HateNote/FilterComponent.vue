@@ -36,7 +36,7 @@ const handleIdentityChange = () => {
   updateAvailableDates();
 };
 const allDates = computed(() => {
-  return  props.posts.map(post => post.timestamp.split('T')[0]).filter((date, index, self) => self.indexOf(date) === index);
+  return props.posts.map(post => post.timestamp.split(' ')[0]).filter((date, index, self) => self.indexOf(date) === index);
 });
 // 更新可用日期列表
 const updateAvailableDates = () => {
