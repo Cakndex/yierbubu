@@ -113,7 +113,6 @@ const calculateDays = (dateStr) => {
 
 const computedDay = (dateStr) => {
   const days = calculateDays(dateStr);
-  console.log('计算日期:', days);
   if (days > 0) {
     return `${days}天后`;
   } else if (days === 0) {
@@ -147,7 +146,6 @@ const getRandomColor = () => {
   ];
 
   const randomIndex = Math.floor(Math.random() * colors.length);
-  console.log(`随机颜色索引: ${randomIndex}, 颜色值: ${colors[randomIndex]}`);
   return colors[randomIndex];
 };
 

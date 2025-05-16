@@ -32,7 +32,6 @@ const props = defineProps({
 const statsData = computed(() => {
   const data = {};
   props.posts.forEach(post => {
-    console.log(post)
     const date = post.timestamp.split('T')[0];
     if (!data[date]) {
       data[date] = { yier: false, bubu: false };

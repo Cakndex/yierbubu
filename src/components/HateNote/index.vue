@@ -169,11 +169,9 @@ onMounted(() => {
     const formattedPosts = data ? Object.values(data).map(post => {
       // 将 comments 对象转为数组
       post.comments = post.comments ? Object.values(post.comments) : [];
-      console.log('处理后的动态:', post.images)
       return post;
     }) : [];
     posts.value = formattedPosts.reverse();
-    console.log('从 Firebase 获取数据:', posts.value);
   }, (err) => {
     console.error('获取动态数据失败:', err);
   });
@@ -205,7 +203,6 @@ const publishPost = async () => {
       : new Date().toISOString(), // 保留原时间或生成新时间
     forgiven: false
   };
-  console.log(newPostData)
   try {
     if (isEdit) {
       // 编辑场景：更新指定节点（直接通过 db 构建路径）
@@ -250,7 +247,6 @@ const handlePostImageUpload = (e) => {
 
 // 编辑动态
 const editPost = (post) => {
-  console.log(post)
   newPost.content = post.content;
   newPost.images = post?.images ?? []
   newPost.originalId = post.id; // 记录原始动态ID
