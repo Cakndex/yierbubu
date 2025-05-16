@@ -34,7 +34,7 @@
         </div>
         <div class="countdown">
           <span class="countdown-text" :class="getCountdownClass(item.days)">
-            {{ item.days > 0 ? `${item.days}天后` : item.days === 0 ? '今天！' : `${-item.days}天前` }}
+            {{ computedDay(item.date) }}
           </span>
         </div>
 
@@ -111,6 +111,17 @@ const calculateDays = (dateStr) => {
   return targetDate.diff(today, 'day');
 };
 
+const computedDay = (dateStr) => {
+  const days = calculateDays(dateStr);
+  console.log('计算日期:', days);
+  if (days > 0) {
+    return `${days}天后`;
+  } else if (days === 0) {
+    return '今天！';
+  } else {
+    return `${-days}天前`;
+  }
+};
 // 格式化日期
 const formatDate = (dateStr) => {
   return dayjs(dateStr).format('YYYY年MM月DD日');

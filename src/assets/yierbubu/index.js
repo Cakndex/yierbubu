@@ -13,7 +13,10 @@ import yierbubu10 from './yierbubu10.gif'
 import yierbubu11 from './yierbubu11.gif'
 import yierbubu12 from './yierbubu12.gif'
 import yierbubu13 from './yierbubu13.gif'
+import yierRole from './yierRole.gif'
+import youke from './youke.jpeg'
 export default [
+  yierRole,
   card1,
   card2,
   yierbubu1,
@@ -29,4 +32,9 @@ export default [
   yierbubu11,
   yierbubu12,
   yierbubu13
+]
+export const RoleImg = [
+  yierRole,
+  yierbubu8,
+  youke
 ]

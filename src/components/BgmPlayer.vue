@@ -2,12 +2,12 @@
 <template>
   <div>
     <audio ref="audioPlayer" src="/bgm.mp3" loop></audio>
-    <div class="bgm_icon" :class="{'rotate': isPlaying}" @click="togglePlay"></div>
+    <div class="bgm_icon" :class="{ 'rotate': isPlaying }" @click="togglePlay"></div>
   </div>
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const isPlaying = ref(false)
 const audioPlayer = ref(null)
@@ -33,7 +33,8 @@ function togglePlay() {
   left: 10px;
   cursor: pointer;
 }
-.bgm_icon_tips{
+
+.bgm_icon_tips {
   z-index: 1000;
   width: 32px;
   height: 32px;
@@ -43,13 +44,16 @@ function togglePlay() {
   left: 50px;
   cursor: pointer;
 }
+
 .bgm_icon.rotate {
   animation: rotate 4s linear infinite;
 }
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
