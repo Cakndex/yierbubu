@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import { RoleImg } from '../../assets/yierbubu/index'
 import StatsComponent from './StatsComponent.vue'

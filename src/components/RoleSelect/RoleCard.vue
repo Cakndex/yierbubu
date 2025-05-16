@@ -1,6 +1,6 @@
 <template>
-  <div class="role-card" @click="handleClick">
-    <img :src="role.icon" class="icon" width="36"/>
+  <div class="role-card" :class="[{ 'selected': role.id === selectedRole }]" @click="handleClick">
+    <img :src="role.icon" class="icon" width="36" />
     <div class="name">{{ role.name }}</div>
     <div class="description">{{ role.description }}</div>
   </div>
@@ -10,11 +10,11 @@
 import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
-  role: Object
+  role: Object,
+  selectedRole: String
 })
 
 const emit = defineEmits(['select'])
-
 const handleClick = () => {
   emit('select', props.role.id)
 }
@@ -34,7 +34,7 @@ const handleClick = () => {
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: #3b82f6;
+    border-color: #42b983;
   }
 
   .name {
@@ -48,5 +48,11 @@ const handleClick = () => {
     color: #64748b;
     text-align: center;
   }
+}
+
+.selected {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: #3b82f6;
 }
 </style>

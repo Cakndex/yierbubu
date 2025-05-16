@@ -3,7 +3,7 @@
     <div class="modal-content">
       <h3 class="modal-title">请选择您的身份</h3>
       <div class="role-cards">
-        <RoleCard v-for="role in roles" :key="role.id" :role="role" @select="handleRoleSelection" />
+        <RoleCard v-for="role in roles" :key="role.id" :role="role" :selectedRole="selectedRole" @select="handleRoleSelection" />
       </div>
       <button class="confirm-button" @click="confirmSelection">确定</button>
     </div>
@@ -25,7 +25,25 @@ const selectedRole = ref(null)
 
 onMounted(() => {
   const storedRole = localStorage.getItem('yierbubu-role')
-  if (!storedRole) {
+  const storedRoleTime = localStorage.getItem('yierbubu-role-time')
+
+  if (storedRole) {
+    if (storedRole === 'guest') {
+      showModal.value = false
+    } else if (storedRoleTime) {
+      const currentTime = new Date().getTime()
+      const timeDiff = currentTime - new Date(storedRoleTime).getTime()
+      const daysDiff = timeDiff / (1000 * 60 * 60 * 24)
+
+      if (daysDiff > 7) {
+        localStorage.removeItem('yierbubu-role')
+        localStorage.removeItem('yierbubu-role-time')
+        showModal.value = true
+      } else {
+        showModal.value = false
+      }
+    }
+  } else {
     showModal.value = true
   }
 })
@@ -37,6 +55,7 @@ const handleRoleSelection = (roleId) => {
 const confirmSelection = () => {
   if (selectedRole.value) {
     localStorage.setItem('yierbubu-role', selectedRole.value)
+    localStorage.setItem('yierbubu-role-time', new Date().toISOString())
     showModal.value = false
   } else {
     alert('请选择一个身份')
@@ -51,7 +70,6 @@ const confirmSelection = () => {
   left: 5%;
   width: 90%;
   max-height: 500px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
