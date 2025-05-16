@@ -6,6 +6,8 @@
         <button @click="currentTab = 'home'" :class="{ 'active': currentTab === 'home' }">说说主页</button>
         <button @click="currentTab = 'stats'" :class="{ 'active': currentTab === 'stats' }">统计分析</button>
       </div>
+      <!-- 筛选器组件 -->
+      <FilterComponent ref="filterComponent" :posts="posts" />
       <!-- 发布动态区域和动态列表 -->
       <div v-show="currentTab === 'home'">
         <!-- 发布动态区域 -->
@@ -97,6 +99,8 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import { RoleImg } from '../../assets/yierbubu/index'
 import StatsComponent from './StatsComponent.vue'
+import FilterComponent from './FilterComponent.vue';
+
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref as fireRef, onValue, set, remove } from 'firebase/database';
 
@@ -143,18 +147,31 @@ const showUpload = ref(false)
 const searchText = ref('')
 const editingPost = ref(null) // 编辑中的动态对象
 
+const filterComponent = ref(null);
+// 计算属性 - 过滤动态
+const filteredPosts = computed(() => {
+  let result = posts.value;
+
+  // 身份筛选
+  if (filterComponent.value?.selectedIdentity) {
+    result = result.filter(post => post.user.name === filterComponent.value.selectedIdentity);
+  }
+
+  // 时间筛选
+  if (filterComponent.value?.selectedDate) {
+    const selectedDate = new Date(filterComponent.value.selectedDate);
+    result = result.filter(post => {
+      const postDate = new Date(post.timestamp);
+      return postDate.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0];
+    });
+  }
+
+  return result;
+});
+
 const showImageUpload = () => {
   showUpload.value = true
 }
-
-// 计算属性 - 过滤动态
-const filteredPosts = computed(() => {
-  if (!searchText.value) return posts.value;
-  return posts.value.filter(post =>
-    post.content.includes(searchText.value) ||
-    post.comments.some(comment => comment.content.includes(searchText.value))
-  );
-});
 
 // 日期格式化
 const formatDate = (dateStr) => {
