@@ -7,7 +7,14 @@
           <RoleCard v-for="role in roles" :key="role.id" :role="role" :selectedRole="selectedRole"
             @select="handleRoleSelection" />
         </div>
-        <button class="confirm-button" @click="confirmSelection">确定</button>
+        <div class="username-input">
+          <label for="username">请输入您的用户名:</label>
+          <input type="text" id="username" v-model="username" placeholder="请输入用户名" />
+        </div>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        <button class="confirm-button" @click="confirmSelection" :disabled="isSubmitting">
+          {{ isSubmitting ? '提交中...' : '确定' }}
+        </button>
       </div>
     </div>
   </div>
@@ -17,6 +24,33 @@
 import { ref, onMounted, watch } from 'vue'
 import RoleCard from './RoleCard.vue'
 import { RoleImg } from '../../assets/yierbubu/index'
+import { initializeApp } from 'firebase/app'
+import { 
+  getDatabase, 
+  ref as fireRef, 
+  push, 
+  set, 
+  get, 
+  query, 
+  orderByChild, 
+  equalTo 
+} from 'firebase/database'
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBEYS8UtnIdaYA4aZHsFCE3rnSya_DdS8o",
+  authDomain: "yierbubu.firebaseapp.com",
+  projectId: "yierbubu",
+  storageBucket: "yierbubu.firebasestorage.app",
+  messagingSenderId: "745521053033",
+  appId: "1:745521053033:web:57602c1e935aa1cca811f8",
+  measurementId: "G-7TF1KMZJBQ",
+  databaseURL: 'https://yierbubu-default-rtdb.asia-southeast1.firebasedatabase.app'
+};
+
+// 初始化 Firebase - 写法已符合 v11 规范
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const usersRef = fireRef(db, 'users');
 
 const showModal = ref(false)
 const roles = ref([
@@ -25,29 +59,24 @@ const roles = ref([
   { id: 'guest', name: '访客', icon: RoleImg[2], description: '访客身份' }
 ])
 const selectedRole = ref(null)
+const username = ref('')
+const errorMessage = ref('')
+const isSubmitting = ref(false)
 
 onMounted(() => {
-  const storedRole = localStorage.getItem('yierbubu-role')
-  const storedRoleTime = localStorage.getItem('yierbubu-role-time')
-
-  if (storedRole) {
-    if (storedRole === 'guest') {
-      showModal.value = false
-    } else if (storedRoleTime) {
-      const currentTime = new Date().getTime()
-      const timeDiff = currentTime - new Date(storedRoleTime).getTime()
-      const daysDiff = timeDiff / (1000 * 60 * 60 * 24)
-
-      if (daysDiff > 7) {
-        localStorage.removeItem('yierbubu-role')
-        localStorage.removeItem('yierbubu-role-time')
-        showModal.value = true
-      } else {
-        showModal.value = false
-      }
-    }
-  } else {
+  // 清除旧的存储
+  if (localStorage.getItem('yierbubu-role')) {
+    localStorage.removeItem('yierbubu-role')
+    localStorage.removeItem('yierbubu-role-time')
+  }
+  
+  // 检查是否有新的角色存储
+  const storedRole = localStorage.getItem('YIERBUBU_ROLE')
+  
+  if (!storedRole) {
     showModal.value = true
+  } else {
+    showModal.value = false
   }
 })
 
@@ -61,21 +90,79 @@ watch(showModal, (newValue) => {
 
 const handleRoleSelection = (roleId) => {
   selectedRole.value = roleId
+  errorMessage.value = '' // 清除之前的错误信息
 }
 
-const confirmSelection = () => {
-  if (selectedRole.value) {
-    localStorage.setItem('yierbubu-role', selectedRole.value)
-    localStorage.setItem('yierbubu-role-time', new Date().toISOString())
+// 检查用户名和角色冲突
+const checkUsernameAndRoleConflict = async () => {
+  // 检查输入是否为空
+  if (!selectedRole.value) {
+    return '请选择一个身份'
+  }
+  
+  if (!username.value.trim()) {
+    return '请输入用户名'
+  }
+  
+  // 检查特殊角色占用情况
+  if (selectedRole.value === 'yier' || selectedRole.value === 'bubu') {
+    const roleQuery = query(usersRef, orderByChild('role'), equalTo(selectedRole.value))
+    const snapshot = await get(roleQuery)
+    
+    if (snapshot.exists()) {
+      return `"${selectedRole.value === 'yier' ? '一二' : '布布'}"身份已被占用，请选择其他身份`
+    }
+  }
+  
+  // 检查用户名是否重复
+  const usernameQuery = query(usersRef, orderByChild('username'), equalTo(username.value))
+  const snapshot = await get(usernameQuery)
+  
+  if (snapshot.exists()) {
+    return '该用户名已被使用，请选择其他用户名'
+  }
+  
+  return null // 没有冲突
+}
+
+const confirmSelection = async () => {
+  if (isSubmitting.value) return
+  
+  try {
+    isSubmitting.value = true
+    errorMessage.value = ''
+    
+    // 检查冲突
+    const conflictError = await checkUsernameAndRoleConflict()
+    if (conflictError) {
+      errorMessage.value = conflictError
+      return
+    }
+    
+    // 保存到 localStorage
+    localStorage.setItem('YIERBUBU_ROLE', selectedRole.value)
+    localStorage.setItem('YIERBUBU_NAME', username.value)
+    
+    // 保存到 Firebase - 写法已符合 v11 规范
+    const newUserRef = push(usersRef)
+    await set(newUserRef, {
+      role: selectedRole.value,
+      username: username.value,
+      createdAt: new Date().toISOString()
+    })
+    
     showModal.value = false
-  } else {
-    alert('请选择一个身份')
+  } catch (error) {
+    console.error('保存用户信息失败:', error)
+    errorMessage.value = '保存失败，请稍后再试'
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
 
-
 <style scoped lang="scss">
+/* 样式部分保持不变 */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -91,7 +178,7 @@ const confirmSelection = () => {
 
 .role-selection-modal {
   width: 90%;
-  max-height: 500px;
+  max-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,7 +189,7 @@ const confirmSelection = () => {
     border-radius: 1rem;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     max-width: 500px;
-    max-height: 500px;
+    max-height: 600px;
     width: 100%;
 
     .modal-title {
@@ -116,11 +203,42 @@ const confirmSelection = () => {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
-      padding: 0 1rem 2rem;
+      padding: 0 1rem 1rem;
 
       @media (min-width: 768px) {
         grid-template-columns: repeat(3, 1fr);
       }
+    }
+    
+    .username-input {
+      margin: 0 2rem 1rem;
+      
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+      
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        
+        &:focus {
+          outline: none;
+          border-color: #42b983;
+          box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
+        }
+      }
+    }
+    
+    .error-message {
+      color: #dc3545;
+      text-align: center;
+      margin: 0.5rem 2rem 1rem;
+      font-size: 0.9rem;
     }
 
     .confirm-button {
@@ -138,8 +256,13 @@ const confirmSelection = () => {
       cursor: pointer;
       transition: all 0.3s ease;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: #0056b3;
+      }
+      
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
       }
     }
   }

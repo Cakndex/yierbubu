@@ -199,7 +199,7 @@ onMounted(() => {
     console.error('获取动态数据失败:', err);
   });
   // 从 localStorage 获取角色信息（这部分仍使用本地存储，如需同步到数据库需额外处理）
-  const role = localStorage.getItem('yierbubu-role');
+  const role = localStorage.getItem('YIERBUBU_ROLE');
   if (role === 'yier') {
     currentUser.value = users[0];
   } else if (role === 'bubu') {

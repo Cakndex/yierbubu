@@ -1,6 +1,7 @@
 <template>
   <div>
     <BgmPlayer />
+    <UserCount />
     <Header v-model:activeIndex="activeIndex" />
     <!-- 首页 -->
     <IndexBody v-if="activeIndex === 0" />
@@ -15,6 +16,7 @@
 <script setup>
 import Header from './components/Header.vue'
 import BgmPlayer from './components/BgmPlayer.vue'
+import UserCount from './components/UserCount/index.vue'
 import IndexBody from './components/IndexBody.vue'
 import MemoryDay from './components/MemoryDay.vue'
 import HateNote from './components/HateNote/index.vue'
