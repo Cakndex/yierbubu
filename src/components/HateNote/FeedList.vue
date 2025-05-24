@@ -102,8 +102,10 @@ const emitDeletePost = (post) => {
 
 // 切换原谅状态
 const emitToggleForgiven = (post) => {
-  post.user.id === props.currentUser.id
-  emits('toggleForgiven', post);
+  if (post.user.id === props.currentUser.id) {
+    emits('toggleForgiven', post);
+
+  }
 };
 
 // 切换评论显示

@@ -5,7 +5,7 @@
         <img :src="currentUser.avatar" alt="头像" class="post-avatar">
         <div class="post-info">
           <div class="post-name">{{ currentUser.name }}</div>
-          <span class="post-time">{{ formatDate(new Date().toLocaleString()) }}</span>
+          <span class="post-time">{{ new Date().toLocaleString() }}</span>
         </div>
       </div>
       <div class="post-form">
@@ -33,13 +33,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import dayjs from 'dayjs'
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-
-// 使用 dayjs 插件设置默认时区为北京时间
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("Asia/Shanghai");
 
 const props = defineProps({
   currentUser: {
@@ -56,12 +49,8 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['publishPost', 'handleImageUpload'])
+const emits = defineEmits(['publishPost', 'handleImageUpload', 'showImageUpload'])
 
-// 日期格式化
-const formatDate = (dateStr) => {
-  return dayjs.tz(dateStr, "Asia/Shanghai").format('YYYY年MM月DD日 HH:MM');
-};
 
 // 显示图片上传控件
 const showImageUpload = () => {

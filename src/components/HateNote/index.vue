@@ -10,7 +10,7 @@
       <!-- 内容区域根据当前标签页显示不同组件 -->
       <div v-if="currentTab === 'home'">
         <PostArea :currentUser="currentUser" :newPost="newPost" :showUpload="showUpload" @publishPost="publishPost"
-          @handleImageUpload="handlePostImageUpload" />
+          @handleImageUpload="handlePostImageUpload" @showImageUpload="handleshowImageUpload" />
         <FeedList :posts="posts" :filteredPosts="filteredPosts" :currentUser="currentUser" @editPost="editPost"
           @deletePost="deletePost" @toggleForgiven="toggleForgiven" @toggleComments="toggleComments"
           @addComment="addComment" />
@@ -112,6 +112,7 @@ onMounted(() => {
       post.comments = post.comments ? Object.values(post.comments) : [];
       return post;
     }) : [];
+    console.log('获取动态数据:', formattedPosts);
     posts.value = formattedPosts.reverse();
   }, (err) => {
     console.error('获取动态数据失败:', err);
@@ -154,7 +155,7 @@ const publishPost = async (postData) => {
   const avatarBase64 = await convertImageToBase64(avatarBlob);
   const isEdit = !!postData.originalId; // 判断是否为编辑状态
   const newPostData = {
-    id: isEdit ? postData.originalId : Date.now(), // 编辑时使用原ID，新建时生成新ID
+    id: isEdit ? postData.originalId : Date.now(), 
     user: {
       ...currentUser.value,
       avatar: avatarBase64 // 使用 Base64 格式的头像
@@ -193,7 +194,9 @@ const resetPostForm = (isEdit = false) => {
     // 这里假设评论相关状态在其他地方管理
   }
 };
-
+const handleshowImageUpload = () => {
+  showUpload.value = !showUpload.value;
+}
 // 处理图片上传
 const handlePostImageUpload = (e) => {
   const files = e.target.files;
