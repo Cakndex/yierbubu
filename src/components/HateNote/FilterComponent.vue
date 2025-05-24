@@ -40,7 +40,6 @@ const allDates = computed(() => {
 });
 // 更新可用日期列表
 const updateAvailableDates = () => {
-  console.log('更新可用日期列表', props.posts);
   if (selectedIdentity.value) {
     availableDates.value = allDates.value.filter(date =>
       props.posts.some(post => post.user.name === selectedIdentity.value && post.timestamp.includes(date))

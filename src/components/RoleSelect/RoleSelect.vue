@@ -24,32 +24,17 @@
 import { ref, onMounted, watch } from 'vue'
 import RoleCard from './RoleCard.vue'
 import { RoleImg } from '../../assets/yierbubu/index'
-import { initializeApp } from 'firebase/app'
-import { 
-  getDatabase, 
-  ref as fireRef, 
-  push, 
-  set, 
-  get, 
-  query, 
-  orderByChild, 
-  equalTo 
+import {
+  ref as fireRef,
+  push,
+  set,
+  get,
+  query,
+  orderByChild,
+  equalTo
 } from 'firebase/database'
+import db from '../../services/firebase'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBEYS8UtnIdaYA4aZHsFCE3rnSya_DdS8o",
-  authDomain: "yierbubu.firebaseapp.com",
-  projectId: "yierbubu",
-  storageBucket: "yierbubu.firebasestorage.app",
-  messagingSenderId: "745521053033",
-  appId: "1:745521053033:web:57602c1e935aa1cca811f8",
-  measurementId: "G-7TF1KMZJBQ",
-  databaseURL: 'https://yierbubu-default-rtdb.asia-southeast1.firebasedatabase.app'
-};
-
-// 初始化 Firebase - 写法已符合 v11 规范
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const usersRef = fireRef(db, 'users');
 
 const showModal = ref(false)
@@ -69,10 +54,10 @@ onMounted(() => {
     localStorage.removeItem('yierbubu-role')
     localStorage.removeItem('yierbubu-role-time')
   }
-  
+
   // 检查是否有新的角色存储
   const storedRole = localStorage.getItem('YIERBUBU_ROLE')
-  
+
   if (!storedRole) {
     showModal.value = true
   } else {
@@ -93,56 +78,68 @@ const handleRoleSelection = (roleId) => {
   errorMessage.value = '' // 清除之前的错误信息
 }
 
-// 检查用户名和角色冲突
 const checkUsernameAndRoleConflict = async () => {
   // 检查输入是否为空
   if (!selectedRole.value) {
     return '请选择一个身份'
   }
-  
+
   if (!username.value.trim()) {
     return '请输入用户名'
   }
-  
+
   // 检查特殊角色占用情况
   if (selectedRole.value === 'yier' || selectedRole.value === 'bubu') {
-    const roleQuery = query(usersRef, orderByChild('role'), equalTo(selectedRole.value))
-    const snapshot = await get(roleQuery)
-    
-    if (snapshot.exists()) {
-      return `"${selectedRole.value === 'yier' ? '一二' : '布布'}"身份已被占用，请选择其他身份`
+    const specialRolesQuery = query(usersRef, orderByChild('role'), equalTo('yier'))
+    const specialRolesSnapshot = await get(specialRolesQuery)
+
+    let specialRolesCount = 0
+    if (specialRolesSnapshot.exists()) {
+      specialRolesCount += specialRolesSnapshot.size
+    }
+
+    const bubuRolesQuery = query(usersRef, orderByChild('role'), equalTo('bubu'))
+    const bubuRolesSnapshot = await get(bubuRolesQuery)
+
+    if (bubuRolesSnapshot.exists()) {
+      specialRolesCount += bubuRolesSnapshot.size
+    }
+
+    if (specialRolesCount > 4) {
+      return '特殊角色数量已达上限，请选择其他身份'
     }
   }
-  
+
   // 检查用户名是否重复
   const usernameQuery = query(usersRef, orderByChild('username'), equalTo(username.value))
   const snapshot = await get(usernameQuery)
-  
+
   if (snapshot.exists()) {
     return '该用户名已被使用，请选择其他用户名'
   }
-  
+
   return null // 没有冲突
 }
 
+
 const confirmSelection = async () => {
   if (isSubmitting.value) return
-  
+
   try {
     isSubmitting.value = true
     errorMessage.value = ''
-    
+
     // 检查冲突
     const conflictError = await checkUsernameAndRoleConflict()
     if (conflictError) {
       errorMessage.value = conflictError
       return
     }
-    
+
     // 保存到 localStorage
     localStorage.setItem('YIERBUBU_ROLE', selectedRole.value)
     localStorage.setItem('YIERBUBU_NAME', username.value)
-    
+
     // 保存到 Firebase - 写法已符合 v11 规范
     const newUserRef = push(usersRef)
     await set(newUserRef, {
@@ -150,7 +147,7 @@ const confirmSelection = async () => {
       username: username.value,
       createdAt: new Date().toISOString()
     })
-    
+
     showModal.value = false
   } catch (error) {
     console.error('保存用户信息失败:', error)
@@ -209,23 +206,23 @@ const confirmSelection = async () => {
         grid-template-columns: repeat(3, 1fr);
       }
     }
-    
+
     .username-input {
       margin: 0 2rem 1rem;
-      
+
       label {
         display: block;
         margin-bottom: 0.5rem;
         font-weight: bold;
       }
-      
+
       input {
         width: 100%;
         padding: 0.75rem;
         border: 1px solid #ddd;
         border-radius: 0.5rem;
         font-size: 1rem;
-        
+
         &:focus {
           outline: none;
           border-color: #42b983;
@@ -233,7 +230,7 @@ const confirmSelection = async () => {
         }
       }
     }
-    
+
     .error-message {
       color: #dc3545;
       text-align: center;
@@ -259,7 +256,7 @@ const confirmSelection = async () => {
       &:hover:not(:disabled) {
         background-color: #0056b3;
       }
-      
+
       &:disabled {
         background-color: #cccccc;
         cursor: not-allowed;

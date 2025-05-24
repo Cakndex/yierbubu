@@ -19,6 +19,12 @@
         <div class="img_name">刘云宇</div>
       </div>
     </div>
+    <div class="card_container">
+      <div class="scroll-wrapper" ref="scrollWrapper">
+        <img v-for="(item, index) in yierbubuImgArr" :key="item + index" :src="item" class="card card1"
+          ref="scrollImgRef">
+      </div>
+    </div>
     <div class="content">
       <!-- 关于我们 -->
       <div class="about_us">
@@ -34,12 +40,6 @@
           <div>
             &nbsp;&nbsp;&nbsp;&nbsp;到了大学，醒悟的布布重新找到一二，互相诉说着这三年来各自的遭遇，在经历了这么多事情之后，两人决定再也不分开了。至此，一二和布布从soulmate变成lovers，开启了属于他们的爱情篇章......
           </div>
-        </div>
-      </div>
-      <div class="card_container">
-        <div class="scroll-wrapper" ref="scrollWrapper">
-          <img v-for="(item, index) in yierbubuImgArr" :key="item + index" :src="item" class="card card1"
-            ref="scrollImgRef">
         </div>
       </div>
     </div>
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
   width: 100px;
   opacity: 0;
   transform: translateY(100px);
-  animation: cardAppear 1.5s 0.5s ease-out forwards;
+  animation: cardAppear 1s ease-out forwards;
 }
 
 .scroll-wrapper {
