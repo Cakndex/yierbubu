@@ -36,9 +36,9 @@ const statsData = computed(() => {
     if (!data[date]) {
       data[date] = { yier: false, bubu: false };
     }
-    if (post.user.name === '一二') {
+    if (post.user.id === 1) {
       data[date].yier = true;
-    } else if (post.user.name === '布布') {
+    } else if (post.user.id === 2) {
       data[date].bubu = true;
     }
   });
