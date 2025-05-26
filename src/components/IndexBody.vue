@@ -255,6 +255,7 @@ onBeforeUnmount(() => {
   font-family: 'keai';
   padding: 4px;
   width: 100%;
+  box-sizing: border-box;
   height: 150px;
   margin-top: 30px;
   overflow: hidden;
