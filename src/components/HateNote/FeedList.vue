@@ -25,10 +25,10 @@
       <div class="feed-content">
         <p>{{ post.content }}</p>
         <div class="feed-images">
-          <img :src="url" alt="动态图片" class="feed-img" v-for="url in post.images" :key="url">
+          <img :src="url" alt="动态图片" class="feed-img" v-for="url in post.images" :key="url" @click="openPreview(url)">
         </div>
       </div>
-      <div class="feed-footer">
+      <div div class=" feed-footer">
         <div class="comment-section">
           <button @click="emitToggleComments(post)" class="comment-button">
             {{ post.comments?.length || 0 }}条留言，点击留言
@@ -46,14 +46,17 @@
         </div>
       </div>
     </div>
+    <ImagePreview :visible="previewVisible" :image-url="previewImageUrl" @close="closePreview" />
   </div>
+
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 import dayjs from 'dayjs'
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import ImagePreview from './ImagePreview.vue'
 
 // 使用 dayjs 插件设置默认时区为北京时间
 dayjs.extend(utc);
@@ -82,6 +85,20 @@ const emits = defineEmits([
   'toggleComments',
   'addComment'
 ])
+// 添加预览相关的状态
+const previewVisible = ref(false)
+const previewImageUrl = ref('')
+
+// 添加预览方法
+const openPreview = (url) => {
+  previewImageUrl.value = url
+  previewVisible.value = true
+}
+
+const closePreview = () => {
+  previewVisible.value = false
+  previewImageUrl.value = ''
+}
 
 const newComment = { content: '' }
 
@@ -147,7 +164,7 @@ $neutral-600: #4B5563; // 深中性色
   transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .feed-header {
@@ -213,21 +230,33 @@ $neutral-600: #4B5563; // 深中性色
     }
 
     .feed-images {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); // 一行最多三张
       gap: 8px;
+      width: 100%;
 
       .feed-img {
-        width: 30%;
+        aspect-ratio: 1; // 保持正方形
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         border-radius: 8px;
         transition: transform 0.2s ease;
+        cursor: pointer; // 添加指针样式表明可点击
 
         &:hover {
           transform: scale(1.02);
         }
       }
     }
+
+    // 添加响应式布局
+    @media screen and (max-width: 768px) {
+      .feed-images {
+        grid-template-columns: repeat(2, 1fr); // 在移动端一行显示两张
+      }
+    }
+
   }
 
   .feed-footer {
