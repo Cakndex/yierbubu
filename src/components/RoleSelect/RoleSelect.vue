@@ -48,7 +48,7 @@ const username = ref('')
 const errorMessage = ref('')
 const isSubmitting = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
   // 清除旧的存储
   if (localStorage.getItem('yierbubu-role')) {
     localStorage.removeItem('yierbubu-role')
@@ -57,11 +57,23 @@ onMounted(() => {
 
   // 检查是否有新的角色存储
   const storedRole = localStorage.getItem('YIERBUBU_ROLE')
+  const storedUsername = localStorage.getItem('YIERBUBU_NAME')
 
-  if (!storedRole) {
-    showModal.value = true
+  if (storedRole && storedUsername) {
+    const usernameQuery = query(usersRef, orderByChild('username'), equalTo(storedUsername))
+    const snapshot = await get(usernameQuery)
+
+    if (!snapshot.exists()) {
+      // 用户名不存在于数据库中
+      localStorage.removeItem('YIERBUBU_ROLE')
+      localStorage.removeItem('YIERBUBU_NAME')
+      showModal.value = true
+      errorMessage.value = '用户名不存在，请重新选择身份和输入用户名'
+    } else {
+      showModal.value = false
+    }
   } else {
-    showModal.value = false
+    showModal.value = true
   }
 })
 
@@ -119,7 +131,6 @@ const checkUsernameAndRoleConflict = async () => {
 
   return null // 没有冲突
 }
-
 
 const confirmSelection = async () => {
   if (isSubmitting.value) return
