@@ -119,9 +119,8 @@ const emitDeletePost = (post) => {
 
 // 切换原谅状态
 const emitToggleForgiven = (post) => {
-  if (post.user.id === props.currentUser.id) {
+  if ([1, 2].includes(post.user.id)) {
     emits('toggleForgiven', post);
-
   }
 };
 
