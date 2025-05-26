@@ -112,7 +112,6 @@ onMounted(() => {
       post.comments = post.comments ? Object.values(post.comments) : [];
       return post;
     }) : [];
-    console.log('获取动态数据:', formattedPosts);
     posts.value = formattedPosts.reverse();
   }, (err) => {
     console.error('获取动态数据失败:', err);
