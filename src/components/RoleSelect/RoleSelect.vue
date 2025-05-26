@@ -104,9 +104,8 @@ const checkUsernameAndRoleConflict = async () => {
     if (bubuRolesSnapshot.exists()) {
       specialRolesCount += bubuRolesSnapshot.size
     }
-
-    if (specialRolesCount > 4) {
-      return '特殊角色数量已达上限，请选择其他身份'
+    if (specialRolesCount >= 4) {
+      return '一二和布布的身份已被占用，请选择访客身份或稍后再试'
     }
   }
 
