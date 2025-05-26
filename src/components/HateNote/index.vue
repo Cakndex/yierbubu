@@ -154,7 +154,7 @@ const publishPost = async (postData) => {
   const avatarBase64 = await convertImageToBase64(avatarBlob);
   const isEdit = !!postData.originalId; // 判断是否为编辑状态
   const newPostData = {
-    id: isEdit ? postData.originalId : Date.now(), 
+    id: isEdit ? postData.originalId : Date.now(),
     user: {
       ...currentUser.value,
       avatar: avatarBase64 // 使用 Base64 格式的头像
@@ -162,9 +162,7 @@ const publishPost = async (postData) => {
     content: postData.content,
     images: postData.images,
     comments: isEdit ? posts.value.find(p => p.id === postData.originalId)?.comments || [] : [], // 保留原评论
-    timestamp: isEdit
-      ? new Date(posts.value.find(p => p.id === postData.originalId)?.timestamp).toLocaleString()
-      : new Date().toLocaleString(), // 保留原时间或生成新时间
+    timestamp: new Date().toLocaleString(),
     forgiven: false
   };
   try {
