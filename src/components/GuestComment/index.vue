@@ -83,14 +83,14 @@ const randomStyle = () => {
   return {
     color: `hsl(${hue}, 70%, 50%)`,
     fontSize: `${14 + Math.random() * 8}px`,
-    transform: `rotate(${Math.random() * 15 - 7.5}deg)`,
     position: 'absolute',
-    left: `${10 + Math.random() * 80}%`,
-    top: `${10 + Math.random() * 80}%`,
+    left: `${10 + Math.random() * 50}%`,  // 修改这里
+    top: `${25 + Math.random() * 50}%`,   // 修改这里
     opacity: 0.9,
     transition: 'all 0.5s ease'
   }
 }
+
 
 // 提交留言
 const submitComment = () => {
@@ -214,6 +214,7 @@ $transition-time: 0.3s;
 
   @media (max-width: 768px) {
     padding: 20px;
+    width: calc(100% - 40px);
     padding-top: 30px;
   }
 }
