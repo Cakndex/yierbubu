@@ -9,8 +9,8 @@
     <HateNote v-if="activeIndex === 1" />
     <!-- 纪念日 -->
     <MemoryDay v-if="activeIndex === 2" />
-    <!-- 游戏 -->
-    <PlayGame v-if="activeIndex === 3" />
+    <!-- 访客留言 -->
+    <GuestComment v-if="activeIndex === 3" />
   </div>
   <RoleSelect />
 </template>
@@ -23,7 +23,7 @@ import IndexBody from './components/IndexBody.vue'
 import MemoryDay from './components/MemoryDay.vue'
 import HateNote from './components/HateNote/index.vue'
 import RoleSelect from './components/RoleSelect/RoleSelect.vue'
-import PlayGame from './components/PlayGame/index.vue'
+import GuestComment from './components/GuestComment/index.vue'
 import { ref, onMounted, watch } from 'vue'
 const activeIndex = ref(0)
 watch(activeIndex, (newVal) => {

@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['update:activeIndex'])
-const headerList = ref(['首页', '记仇本', '纪念日', '成长'])
+const headerList = ref(['首页', '记仇本', '纪念日', '访客留言'])
 const updateActiveIndex = (index) => {
   emits('update:activeIndex', index)
 }
@@ -40,7 +40,7 @@ const updateActiveIndex = (index) => {
     font-family: 'keai';
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
@@ -59,7 +59,7 @@ const updateActiveIndex = (index) => {
 }
 
 .header .active {
-  font-size: 24px;
+  font-size: 22px;
   opacity: 1;
 }
 </style>
