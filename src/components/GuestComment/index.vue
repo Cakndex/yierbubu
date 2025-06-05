@@ -84,7 +84,7 @@ const randomStyle = () => {
     color: `hsl(${hue}, 70%, 50%)`,
     fontSize: `${14 + Math.random() * 8}px`,
     position: 'absolute',
-    left: `${10 + Math.random() * 50}%`,  // 修改这里
+    left: `${0 + Math.random() * 50}%`,  // 修改这里
     top: `${25 + Math.random() * 50}%`,   // 修改这里
     opacity: 0.9,
     transition: 'all 0.5s ease'
